@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityMate Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:linear-gradient(
+        135deg,
+        #CFE8FF,
+        #3396e2
+    );
+}
+
+/* Navbar */
+
+nav{
+    background:#ff9100;
+    padding:15px 50px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:white;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.logo img{
+    width:50px;
+    height:50px;
+    object-fit:contain;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    margin-left:25px;
+    font-size:18px;
+}
+
+.menu a:hover{
+    color:#ff9100;
+}
+
+/* Hero Section */
+
+.hero{
+    text-align:center;
+    padding:50px 20px;
+}
+
+.hero h1{
+    color: #001a70;
+    margin-bottom:15px;
+}
+
+.hero p{
+    color:#555;
+    font-size:18px;
+}
+
+/* Search */
+
+.search-box{
+    margin-top:30px;
+}
+
+.search-box input{
+    width:400px;
+    padding:12px;
+    border-radius:25px;
+    border:1px solid #ccc;
+}
+
+.search-box button{
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    background:#001a70;
+    color:white;
+    cursor:pointer;
+}
+
+/* Service Cards */
+
+.cards{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:20px;
+    margin-top:50px;
+}
+
+.card{
+    width:180px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h3{
+    margin-top:10px;
+    color:#001a70;
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+
+<div class="logo">
+    <img src="citymate.png" alt="CityMate Logo">
+    <span>CityMate</span>
+</div>
+
+<div class="menu">
+    <a href="#">Home</a>
+    <a href="#">Services</a>
+    <a href="#">Explore City</a>
+    <a href="#">Profile</a>
+    <a href="index.html">Logout</a>
+</div>
+
+</nav>
+
+<div class="hero">
+
+<h1>Welcome to CityMate</h1>
+
+<p>Your friend in every city</p>
+
+<div class="search-box">
+    <input type="text" placeholder="Search services...">
+    <button>Search</button>
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h1>🔧</h1>
+<h3>Plumber</h3>
+</div>
+
+<div class="card">
+<h1>⚡</h1>
+<h3>Electrician</h3>
+</div>
+
+<div class="card">
+<h1>🧹</h1>
+<h3>Maid</h3>
+</div>
+
+<div class="card">
+<h1>🏥</h1>
+<h3>Hospital</h3>
+</div>
+
+<div class="card">
+<h1>🍔</h1>
+<h3>Food</h3>
+</div>
+
+<div class="card">
+<h1>🏨</h1>
+<h3>Hotel</h3>
+</div>
+
+</div>
+
+</body>
+</html>

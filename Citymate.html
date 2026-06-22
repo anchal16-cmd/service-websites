@@ -8,7 +8,6 @@
 
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <img src="citymate.png" alt="CityMate Logo" class="logo">
@@ -29,37 +28,53 @@
     </div>
 
     <!-- Login Form -->
+
     <div id="loginBox" class="form-container">
+
         <div class="card">
+
+            <span class="close-btn" onclick="closeForms()">&times;</span>
 
             <h2>Welcome Back</h2>
 
-            <input type="email" placeholder="Enter Email">
+            <input type="email" placeholder="Enter Email" required>
 
-            <input type="password" placeholder="Enter Password">
+            <input type="password" placeholder="Enter Password" required>
 
-            <button class="submit-btn">Login</button>
+            <button class="submit-btn"
+            onclick="window.location.href='dashboard.html'">
+                Login
+            </button>
 
         </div>
+
     </div>
 
     <!-- Signup Form -->
+
     <div id="signupBox" class="form-container">
+
         <div class="card">
+
+            <span class="close-btn" onclick="closeForms()">&times;</span>
 
             <h2>Create Account</h2>
 
-            <input type="text" placeholder="Full Name">
+            <input type="text" placeholder="Full Name" required>
 
-            <input type="email" placeholder="Email">
+            <input type="email" placeholder="Email Address" required>
 
-            <input type="password" placeholder="Password">
+            <input type="password" placeholder="Password" required>
 
-            <input type="password" placeholder="Confirm Password">
+            <input type="password" placeholder="Confirm Password" required>
 
-            <button class="signup-submit-btn">Create Account</button>
+            <button class="signup-submit-btn"
+            onclick="window.location.href='dashboard.html'">
+                Create Account
+            </button>
 
         </div>
+
     </div>
 
 </div>
@@ -72,29 +87,36 @@ const signupBtn = document.getElementById("showSignup");
 const loginBox = document.getElementById("loginBox");
 const signupBox = document.getElementById("signupBox");
 
-loginBtn.addEventListener("click", () => {
+loginBtn.addEventListener("click", function(){
 
     signupBox.style.display = "none";
 
     if(loginBox.style.display === "flex"){
         loginBox.style.display = "none";
-    } else {
+    }
+    else{
         loginBox.style.display = "flex";
     }
 
 });
 
-signupBtn.addEventListener("click", () => {
+signupBtn.addEventListener("click", function(){
 
     loginBox.style.display = "none";
 
     if(signupBox.style.display === "flex"){
         signupBox.style.display = "none";
-    } else {
+    }
+    else{
         signupBox.style.display = "flex";
     }
 
 });
+
+function closeForms(){
+    loginBox.style.display = "none";
+    signupBox.style.display = "none";
+}
 
 </script>
 
