@@ -13,9 +13,12 @@ body{
 }
 
 .logo{
-    width:90px;
-    margin:20px;
+    width: 90px;
+    position: fixed;
+    top: 15px;
+    left: 20px;
     display:block;
+    position: absolute;
 }
 
 .hero{
