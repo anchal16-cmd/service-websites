@@ -45,6 +45,14 @@
     box-sizing:border-box;
 }
 
+.logo-img{
+      width: 800px;
+    height: auto;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+}
+
 html{ scroll-behavior:smooth; }
 
 a{ color:inherit; }
