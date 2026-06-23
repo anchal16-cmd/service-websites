@@ -192,8 +192,18 @@ document.addEventListener("keydown", function(e){
     if(e.key === "Escape") closeForms();
 });
 
+// Marks the visitor as logged in (frontend-only session flag).
+// dashboard.html checks this flag and bounces back here if it's missing,
+// so the service-search flow can never be reached without logging in first.
+// Replace this with a real session/token check once a backend exists.
+function markLoggedIn(email){
+    localStorage.setItem("citymate_loggedIn", "true");
+    if(email) localStorage.setItem("citymate_userEmail", email);
+}
+
 loginForm.addEventListener("submit", function(e){
     e.preventDefault();
+    markLoggedIn(document.getElementById("loginEmail").value.trim());
     window.location.href = "dashboard.html";
 });
 
@@ -207,12 +217,14 @@ signupForm.addEventListener("submit", function(e){
         return;
     }
     document.getElementById("confirmPassword").setCustomValidity("");
+    markLoggedIn(document.getElementById("signupEmail").value.trim());
     window.location.href = "dashboard.html";
 });
 
 function handleGoogleAuth(){
     // Placeholder: wire this up to a real OAuth flow (e.g. Google Identity
     // Services) once a backend exists. For now it mirrors the email flow.
+    markLoggedIn();
     window.location.href = "dashboard.html";
 }
 

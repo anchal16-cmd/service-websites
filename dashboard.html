@@ -12,8 +12,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css?v=2">
+<script src="india-locations.js"></script>
 </head>
 <body class="dashboard">
+<script>
+    // Login gate: the service-search feature must never be reachable
+    // without logging in first. index.html sets this flag on successful
+    // login/signup. Swap this check for a real session/token check once
+    // a backend exists.
+    if(localStorage.getItem("citymate_loggedIn") !== "true"){
+        window.location.replace("index.html");
+    }
+</script>
 
 <nav class="navbar">
 
@@ -26,7 +36,28 @@
 
     <div class="menu" id="navMenu">
         <a href="dashboard.html">Home</a>
-        <a href="#services">Services</a>
+
+        <div class="nav-dropdown" id="navServiceDropdown">
+            <button type="button" class="nav-dropdown-toggle" id="navServiceBtn" aria-haspopup="true" aria-expanded="false" aria-controls="navServiceMenu">
+                Service
+                <svg class="caret" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5"/></svg>
+            </button>
+            <div class="nav-dropdown-menu" id="navServiceMenu" role="menu">
+                <button type="button" role="menuitem" data-service="Plumber"><span class="svc-emoji">🔧</span>Plumber</button>
+                <button type="button" role="menuitem" data-service="Electrician"><span class="svc-emoji">⚡</span>Electrician</button>
+                <button type="button" role="menuitem" data-service="Maid / House Cleaning"><span class="svc-emoji">🧹</span>Maid / House Cleaning</button>
+                <button type="button" role="menuitem" data-service="Carpenter"><span class="svc-emoji">🪚</span>Carpenter</button>
+                <button type="button" role="menuitem" data-service="Painter"><span class="svc-emoji">🎨</span>Painter</button>
+                <button type="button" role="menuitem" data-service="AC Repair"><span class="svc-emoji">❄️</span>AC Repair</button>
+                <button type="button" role="menuitem" data-service="Medical Shop / Pharmacy"><span class="svc-emoji">💊</span>Medical Shop / Pharmacy</button>
+                <button type="button" role="menuitem" data-service="General Store"><span class="svc-emoji">🏪</span>General Store</button>
+                <button type="button" role="menuitem" data-service="Grocery Delivery"><span class="svc-emoji">🛒</span>Grocery Delivery</button>
+                <button type="button" role="menuitem" data-service="Salon / Barber"><span class="svc-emoji">💇</span>Salon / Barber</button>
+                <button type="button" role="menuitem" data-service="Computer / Mobile Repair"><span class="svc-emoji">💻</span>Computer / Mobile Repair</button>
+                <button type="button" role="menuitem" data-service="Ambulance / Emergency"><span class="svc-emoji">🚑</span>Ambulance / Emergency</button>
+            </div>
+        </div>
+
         <a href="#explore">Explore City</a>
         <a href="#profile">Profile</a>
         <a href="index.html" class="logout">Logout</a>
@@ -50,7 +81,7 @@
 
     <div class="section-label">
         <h2 id="servicesHeading">Popular services</h2>
-        <span>6 categories near you</span>
+        <span>12 categories near you</span>
     </div>
 
     <div class="cards" id="cardGrid">
@@ -67,28 +98,64 @@
             <p>Wiring &amp; fixes</p>
         </button>
 
-        <button class="card-tile" data-name="Maid">
+        <button class="card-tile" data-name="Maid / House Cleaning">
             <div class="icon-badge">🧹</div>
-            <h3>Maid</h3>
+            <h3>Maid / Cleaning</h3>
             <p>Home cleaning</p>
         </button>
 
-        <button class="card-tile" data-name="Hospital">
-            <div class="icon-badge">🏥</div>
-            <h3>Hospital</h3>
-            <p>Medical care</p>
+        <button class="card-tile" data-name="Carpenter">
+            <div class="icon-badge">🪚</div>
+            <h3>Carpenter</h3>
+            <p>Furniture &amp; woodwork</p>
         </button>
 
-        <button class="card-tile" data-name="Food">
-            <div class="icon-badge">🍔</div>
-            <h3>Food</h3>
-            <p>Order a meal</p>
+        <button class="card-tile" data-name="Painter">
+            <div class="icon-badge">🎨</div>
+            <h3>Painter</h3>
+            <p>Walls &amp; touch-ups</p>
         </button>
 
-        <button class="card-tile" data-name="Hotel">
-            <div class="icon-badge">🏨</div>
-            <h3>Hotel</h3>
-            <p>Stays nearby</p>
+        <button class="card-tile" data-name="AC Repair">
+            <div class="icon-badge">❄️</div>
+            <h3>AC Repair</h3>
+            <p>Cooling &amp; service</p>
+        </button>
+
+        <button class="card-tile" data-name="Medical Shop / Pharmacy">
+            <div class="icon-badge">💊</div>
+            <h3>Pharmacy</h3>
+            <p>Medicines nearby</p>
+        </button>
+
+        <button class="card-tile" data-name="General Store">
+            <div class="icon-badge">🏪</div>
+            <h3>General Store</h3>
+            <p>Daily essentials</p>
+        </button>
+
+        <button class="card-tile" data-name="Grocery Delivery">
+            <div class="icon-badge">🛒</div>
+            <h3>Grocery Delivery</h3>
+            <p>Order &amp; get it home</p>
+        </button>
+
+        <button class="card-tile" data-name="Salon / Barber">
+            <div class="icon-badge">💇</div>
+            <h3>Salon / Barber</h3>
+            <p>Grooming &amp; styling</p>
+        </button>
+
+        <button class="card-tile" data-name="Computer / Mobile Repair">
+            <div class="icon-badge">💻</div>
+            <h3>Computer / Mobile</h3>
+            <p>Device repairs</p>
+        </button>
+
+        <button class="card-tile" data-name="Ambulance / Emergency">
+            <div class="icon-badge">🚑</div>
+            <h3>Ambulance / Emergency</h3>
+            <p>Urgent help, fast</p>
         </button>
 
     </div>
@@ -123,6 +190,39 @@
     &copy; <span id="year"></span> CityMate. Your friend in every city.
 </footer>
 
+<!-- Location selection modal: opens after a service is chosen from the
+     navbar dropdown or a service card. Collects State / City / Area so a
+     provider search request can be built. -->
+<div id="locationModal" class="form-container" role="dialog" aria-modal="true" aria-labelledby="locationTitle">
+    <div class="card location-card">
+        <span class="close-btn" id="closeLocationModal" role="button" tabindex="0" aria-label="Close location form">&times;</span>
+
+        <p class="loc-service-pill" id="locationServicePill">Plumber</p>
+        <h2 id="locationTitle">Where do you need this?</h2>
+        <p class="sub">Tell us your location to find nearby providers.</p>
+
+        <form id="locationForm" novalidate>
+            <div class="field">
+                <label for="stateSelect">State</label>
+                <select id="stateSelect" required>
+                    <option value="" disabled selected>Select your state</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="citySelect">City</label>
+                <select id="citySelect" required disabled>
+                    <option value="" disabled selected>Select state first</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="areaInput">Area / Street</label>
+                <input id="areaInput" type="text" placeholder="Enter area, street, landmark details (e.g., near railway station)" required>
+            </div>
+            <button class="submit-btn" type="submit">Search Service Provider</button>
+        </form>
+    </div>
+</div>
+
 <script>
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -153,11 +253,149 @@ function handleSearch(e){
     return false;
 }
 
+/* -----------------------------------------------------------------
+   Navbar "Service" dropdown
+   ----------------------------------------------------------------- */
+const navServiceBtn  = document.getElementById("navServiceBtn");
+const navServiceMenu = document.getElementById("navServiceMenu");
+const navDropdown     = document.getElementById("navServiceDropdown");
+
+function closeNavDropdown(){
+    navDropdown.classList.remove("open");
+    navServiceBtn.setAttribute("aria-expanded", "false");
+}
+
+navServiceBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    const isOpen = navDropdown.classList.toggle("open");
+    navServiceBtn.setAttribute("aria-expanded", String(isOpen));
+});
+
+document.addEventListener("click", function(e){
+    if(!navDropdown.contains(e.target)) closeNavDropdown();
+});
+
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closeNavDropdown();
+});
+
+navServiceMenu.querySelectorAll("button[data-service]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+        closeNavDropdown();
+        navMenu.classList.remove("open"); // also collapse mobile menu, if open
+        openLocationModal(btn.dataset.service);
+    });
+});
+
+/* -----------------------------------------------------------------
+   Service cards on the dashboard body — same flow as the dropdown
+   ----------------------------------------------------------------- */
 document.querySelectorAll(".card-tile").forEach(function(card){
     card.addEventListener("click", function(){
-        // Placeholder action — wire this up to a real service-listing page.
-        console.log("Selected service:", card.dataset.name);
+        openLocationModal(card.dataset.name);
     });
+});
+
+/* -----------------------------------------------------------------
+   Location modal: State -> City -> Area, then "Search Service Provider"
+   ----------------------------------------------------------------- */
+const locationModal       = document.getElementById("locationModal");
+const locationServicePill = document.getElementById("locationServicePill");
+const closeLocationModal  = document.getElementById("closeLocationModal");
+const locationForm        = document.getElementById("locationForm");
+const stateSelect         = document.getElementById("stateSelect");
+const citySelect          = document.getElementById("citySelect");
+const areaInput           = document.getElementById("areaInput");
+
+let selectedService = null;
+
+// Populate the State dropdown once from the INDIA_LOCATIONS dataset
+// (loaded via india-locations.js).
+if(typeof INDIA_LOCATIONS !== "undefined"){
+    Object.keys(INDIA_LOCATIONS).sort().forEach(function(state){
+        const opt = document.createElement("option");
+        opt.value = state;
+        opt.textContent = state;
+        stateSelect.appendChild(opt);
+    });
+} else {
+    console.error("INDIA_LOCATIONS not found — make sure india-locations.js is loaded.");
+}
+
+function resetCitySelect(placeholder){
+    citySelect.innerHTML = "";
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.disabled = true;
+    opt.selected = true;
+    opt.textContent = placeholder;
+    citySelect.appendChild(opt);
+}
+
+resetCitySelect("Select state first");
+
+stateSelect.addEventListener("change", function(){
+    const cities = (typeof INDIA_LOCATIONS !== "undefined" && INDIA_LOCATIONS[stateSelect.value]) || [];
+    resetCitySelect("Select your city");
+    citySelect.disabled = cities.length === 0;
+    cities.forEach(function(city){
+        const opt = document.createElement("option");
+        opt.value = city;
+        opt.textContent = city;
+        citySelect.appendChild(opt);
+    });
+});
+
+function openLocationModal(serviceName){
+    selectedService = serviceName;
+    locationServicePill.textContent = serviceName;
+    locationForm.reset();
+    resetCitySelect("Select state first");
+    citySelect.disabled = true;
+    locationModal.classList.add("open");
+    setTimeout(function(){ stateSelect.focus(); }, 0);
+}
+
+function closeLocationModalFn(){
+    locationModal.classList.remove("open");
+}
+
+closeLocationModal.addEventListener("click", closeLocationModalFn);
+
+locationModal.addEventListener("click", function(e){
+    if(e.target === locationModal) closeLocationModalFn();
+});
+
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && locationModal.classList.contains("open")) closeLocationModalFn();
+});
+
+locationForm.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    // All three fields are required (state/city via <select required>,
+    // area via <input required>); reportValidity surfaces native browser
+    // messages if anything is missing.
+    if(!locationForm.checkValidity()){
+        locationForm.reportValidity();
+        return;
+    }
+
+    // Bundle the request — ready to POST to a backend/API once one exists.
+    const searchRequest = {
+        service: selectedService,
+        state: stateSelect.value,
+        city: citySelect.value,
+        area: areaInput.value.trim(),
+        requestedAt: new Date().toISOString()
+    };
+
+    console.log("Service provider search request:", searchRequest);
+    // TODO: replace with a real API call, e.g.
+    // fetch("/api/search-providers", { method: "POST", body: JSON.stringify(searchRequest) })
+
+    closeLocationModalFn();
+    alert("Searching " + searchRequest.service + " providers near " + searchRequest.area + ", " + searchRequest.city + ", " + searchRequest.state + " …");
 });
 </script>
 
