@@ -1,121 +1,219 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CityMate</title>
+<title>CityMate — Your Friend in Every City</title>
+<meta name="description" content="CityMate connects you with trusted local services — plumbers, electricians, maids, hospitals, food and more — in every city.">
+<link rel="icon" type="image/png" href="citymate.png">
 
-<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
-<img src="citymate.png" alt="CityMate Logo" class="logo">
+<header class="site-header">
+    <img src="citymate-every.jpg" alt="CityMate logo" class="logo-img" onerror="this.onerror=null; this.replaceWith(Object.assign(document.createElement('span'), { className:'logo-fallback', textContent:'Logo failed to load: check that citymate.png is in the same folder as this HTML file' }));">
+    <span>City<b>mate</b></span>
+</header>
 
-<div class="hero">
+<main class="hero">
 
-    <h1>CityMate</h1>
-    <p>Your Friend In Every City</p>
+    <p class="eyebrow">Now in your neighbourhood</p>
+
+    <h1>Your friend<br><span class="accent">in every city</span></h1>
+
+    <p class="tagline">Find trusted plumbers, electricians, maids, clinics and more — verified, nearby, and a click away.</p>
+
+    <div class="pin-divider" aria-hidden="true">
+        <svg viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 18 12 18s12-9 12-18c0-6.6-5.4-12-12-12zm0 16.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/>
+        </svg>
+    </div>
 
     <div class="buttons">
-        <button class="find-btn">Find Services</button>
-        <button class="explore-btn">Explore City</button>
+        <button class="find-btn" type="button" onclick="window.location.href='dashboard.html'">Find Services</button>
+        <button class="explore-btn" type="button" onclick="window.location.href='dashboard.html'">Explore City</button>
     </div>
 
     <div class="auth-buttons">
-        <button id="showLogin">Login</button>
-        <button id="showSignup">Sign Up</button>
+        <button id="showLogin" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="loginBox">Login</button>
+        <button id="showSignup" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="signupBox">Sign Up</button>
     </div>
 
     <!-- Login Form -->
-
-    <div id="loginBox" class="form-container">
-
+    <div id="loginBox" class="form-container" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
         <div class="card">
+            <span class="close-btn" onclick="closeForms()" role="button" tabindex="0" aria-label="Close login form">&times;</span>
 
-            <span class="close-btn" onclick="closeForms()">&times;</span>
+            <h2 id="loginTitle">Welcome back</h2>
+            <p class="sub">Log in to find help near you.</p>
 
-            <h2>Welcome Back</h2>
+            <form id="loginForm" novalidate>
+                <div class="field">
+                    <label for="loginEmail">Email</label>
+                    <input id="loginEmail" type="email" placeholder="you@example.com" required>
+                </div>
+                <div class="field">
+                    <label for="loginPassword">Password</label>
+                    <input id="loginPassword" type="password" placeholder="Enter your password" required minlength="6">
+                </div>
+                <button class="submit-btn" type="submit">Log in</button>
+            </form>
 
-            <input type="email" placeholder="Enter Email" required>
+            <div class="divider">or</div>
 
-            <input type="password" placeholder="Enter Password" required>
-
-            <button class="submit-btn"
-            onclick="window.location.href='dashboard.html'">
-                Login
+            <button type="button" class="google-btn" onclick="handleGoogleAuth()">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
+                    <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 18.9 13 24 13c3.1 0 5.9 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4c-7.4 0-13.8 4.1-17.1 10.2z"/>
+                    <path fill="#4CAF50" d="M24 44c5.3 0 10.1-1.8 13.8-5l-6.4-5.4C29.3 35.4 26.8 36 24 36c-5.2 0-9.6-3.4-11.2-8.1l-6.6 5C9.9 39.7 16.4 44 24 44z"/>
+                    <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-0.8 2.3-2.3 4.3-4.2 5.7l6.4 5.4C40.9 36.5 44 31 44 24c0-1.2-.1-2.4-.4-3.5z"/>
+                </svg>
+                Sign in with Google
             </button>
 
+            <p class="switch-line">New to CityMate? <button type="button" onclick="switchTo('signup')">Create an account</button></p>
         </div>
-
     </div>
 
     <!-- Signup Form -->
-
-    <div id="signupBox" class="form-container">
-
+    <div id="signupBox" class="form-container" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
         <div class="card">
+            <span class="close-btn" onclick="closeForms()" role="button" tabindex="0" aria-label="Close signup form">&times;</span>
 
-            <span class="close-btn" onclick="closeForms()">&times;</span>
+            <h2 id="signupTitle">Create your account</h2>
+            <p class="sub">Join CityMate in under a minute.</p>
 
-            <h2>Create Account</h2>
+            <form id="signupForm" novalidate>
+                <div class="field">
+                    <label for="fullName">Full name</label>
+                    <input id="fullName" type="text" placeholder="Your name" required>
+                </div>
+                <div class="field">
+                    <label for="signupEmail">Email</label>
+                    <input id="signupEmail" type="email" placeholder="you@example.com" required>
+                </div>
+                <div class="field">
+                    <label for="signupPassword">Password</label>
+                    <input id="signupPassword" type="password" placeholder="Create a password" required minlength="6">
+                </div>
+                <div class="field">
+                    <label for="confirmPassword">Confirm password</label>
+                    <input id="confirmPassword" type="password" placeholder="Re-enter your password" required minlength="6">
+                </div>
+                <button class="signup-submit-btn" type="submit">Create account</button>
+            </form>
 
-            <input type="text" placeholder="Full Name" required>
+            <div class="divider">or</div>
 
-            <input type="email" placeholder="Email Address" required>
-
-            <input type="password" placeholder="Password" required>
-
-            <input type="password" placeholder="Confirm Password" required>
-
-            <button class="signup-submit-btn"
-            onclick="window.location.href='dashboard.html'">
-                Create Account
+            <button type="button" class="google-btn" onclick="handleGoogleAuth()">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
+                    <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 18.9 13 24 13c3.1 0 5.9 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4c-7.4 0-13.8 4.1-17.1 10.2z"/>
+                    <path fill="#4CAF50" d="M24 44c5.3 0 10.1-1.8 13.8-5l-6.4-5.4C29.3 35.4 26.8 36 24 36c-5.2 0-9.6-3.4-11.2-8.1l-6.6 5C9.9 39.7 16.4 44 24 44z"/>
+                    <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-0.8 2.3-2.3 4.3-4.2 5.7l6.4 5.4C40.9 36.5 44 31 44 24c0-1.2-.1-2.4-.4-3.5z"/>
+                </svg>
+                Sign up with Google
             </button>
 
+            <p class="switch-line">Already have an account? <button type="button" onclick="switchTo('login')">Log in</button></p>
         </div>
-
     </div>
 
-</div>
+</main>
+
+<footer class="site-footer">
+    &copy; <span id="year"></span> CityMate. Built for neighbours, by neighbours.
+</footer>
 
 <script>
 
-const loginBtn = document.getElementById("showLogin");
-const signupBtn = document.getElementById("showSignup");
+const loginBtn   = document.getElementById("showLogin");
+const signupBtn  = document.getElementById("showSignup");
+const loginBox   = document.getElementById("loginBox");
+const signupBox  = document.getElementById("signupBox");
+const loginForm  = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
 
-const loginBox = document.getElementById("loginBox");
-const signupBox = document.getElementById("signupBox");
+document.getElementById("year").textContent = new Date().getFullYear();
+
+function openBox(box, btn){
+    closeForms();
+    box.classList.add("open");
+    btn.setAttribute("aria-expanded", "true");
+    const firstField = box.querySelector("input");
+    if(firstField) firstField.focus();
+}
+
+function closeForms(){
+    loginBox.classList.remove("open");
+    signupBox.classList.remove("open");
+    loginBtn.setAttribute("aria-expanded", "false");
+    signupBtn.setAttribute("aria-expanded", "false");
+}
 
 loginBtn.addEventListener("click", function(){
-
-    signupBox.style.display = "none";
-
-    if(loginBox.style.display === "flex"){
-        loginBox.style.display = "none";
+    if(loginBox.classList.contains("open")){
+        closeForms();
+    } else {
+        openBox(loginBox, loginBtn);
     }
-    else{
-        loginBox.style.display = "flex";
-    }
-
 });
 
 signupBtn.addEventListener("click", function(){
-
-    loginBox.style.display = "none";
-
-    if(signupBox.style.display === "flex"){
-        signupBox.style.display = "none";
+    if(signupBox.classList.contains("open")){
+        closeForms();
+    } else {
+        openBox(signupBox, signupBtn);
     }
-    else{
-        signupBox.style.display = "flex";
-    }
-
 });
 
-function closeForms(){
-    loginBox.style.display = "none";
-    signupBox.style.display = "none";
+function switchTo(which){
+    if(which === "signup"){
+        openBox(signupBox, signupBtn);
+    } else {
+        openBox(loginBox, loginBtn);
+    }
+}
+
+// Close on backdrop click
+[loginBox, signupBox].forEach(function(box){
+    box.addEventListener("click", function(e){
+        if(e.target === box) closeForms();
+    });
+});
+
+// Close on Escape
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closeForms();
+});
+
+loginForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    window.location.href = "dashboard.html";
+});
+
+signupForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    const pw = document.getElementById("signupPassword").value;
+    const confirm = document.getElementById("confirmPassword").value;
+    if(pw !== confirm){
+        document.getElementById("confirmPassword").setCustomValidity("Passwords do not match");
+        document.getElementById("confirmPassword").reportValidity();
+        return;
+    }
+    document.getElementById("confirmPassword").setCustomValidity("");
+    window.location.href = "dashboard.html";
+});
+
+function handleGoogleAuth(){
+    // Placeholder: wire this up to a real OAuth flow (e.g. Google Identity
+    // Services) once a backend exists. For now it mirrors the email flow.
+    window.location.href = "dashboard.html";
 }
 
 </script>
