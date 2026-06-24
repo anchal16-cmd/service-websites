@@ -6,7 +6,6 @@
 <title>CityMate — Your Friend in Every City</title>
 <meta name="description" content="CityMate connects you with trusted local services — plumbers, electricians, maids, hospitals, food and more — in every city.">
 <link rel="icon" type="image/png" href="citymate.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -196,9 +195,10 @@ document.addEventListener("keydown", function(e){
 // dashboard.html checks this flag and bounces back here if it's missing,
 // so the service-search flow can never be reached without logging in first.
 // Replace this with a real session/token check once a backend exists.
-function markLoggedIn(email){
+function markLoggedIn(email, fullName){
     localStorage.setItem("citymate_loggedIn", "true");
     if(email) localStorage.setItem("citymate_userEmail", email);
+    if(fullName) localStorage.setItem("citymate_userFullName", fullName);
 }
 
 loginForm.addEventListener("submit", function(e){
@@ -217,7 +217,7 @@ signupForm.addEventListener("submit", function(e){
         return;
     }
     document.getElementById("confirmPassword").setCustomValidity("");
-    markLoggedIn(document.getElementById("signupEmail").value.trim());
+    markLoggedIn(document.getElementById("signupEmail").value.trim(), document.getElementById("fullName").value.trim());
     window.location.href = "dashboard.html";
 });
 

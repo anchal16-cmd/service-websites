@@ -11,8 +11,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 <script src="india-locations.js"></script>
+<script src="app-data.js"></script>
 </head>
 <body class="dashboard">
 <script>
@@ -59,7 +60,8 @@
         </div>
 
         <a href="#explore">Explore City</a>
-        <a href="#profile">Profile</a>
+        <a href="partner.html">Become a Partner</a>
+        <a href="profile.html">Profile</a>
         <a href="index.html" class="logout">Logout</a>
     </div>
 
@@ -75,7 +77,31 @@
         <input id="serviceSearch" type="text" placeholder="Search services... e.g. plumber, hospital">
         <button type="submit">Search</button>
     </form>
+
+    <button type="button" class="near-me-btn" id="nearMeBtn">
+        <span class="pin-dot" aria-hidden="true">📍</span>
+        Use my current location
+    </button>
+    <p class="near-me-status" id="nearMeStatus" aria-live="polite"></p>
 </header>
+
+<!-- Stat cards: simple trust signals, animated count-up on first view. -->
+<section class="stats-strip" aria-label="CityMate by the numbers">
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <p class="stat-number" data-target="500" data-suffix="+">0</p>
+            <p class="stat-label">Verified providers</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-number" data-target="50" data-suffix="+">0</p>
+            <p class="stat-label">Cities covered</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-number" data-target="1000" data-suffix="+">0</p>
+            <p class="stat-label">Happy users</p>
+        </div>
+    </div>
+</section>
 
 <section id="services" aria-labelledby="servicesHeading">
 
@@ -160,6 +186,18 @@
 
     </div>
 
+</section>
+
+<!-- Emergency numbers: always visible, no login-gated modal — these need
+     to be reachable in one tap during a real emergency. -->
+<section class="emergency-strip" aria-labelledby="emergencyHeading">
+    <div class="section-label" style="margin-top:0;">
+        <h2 id="emergencyHeading">Emergency numbers</h2>
+        <span>Tap to call</span>
+    </div>
+    <div class="emergency-grid" id="emergencyGrid">
+        <!-- populated from EMERGENCY_NUMBERS in app-data.js -->
+    </div>
 </section>
 
 <section class="trust-strip" id="explore" aria-labelledby="trustHeading">
@@ -353,7 +391,21 @@ function openLocationModal(serviceName){
     resetCitySelect("Select state first");
     citySelect.disabled = true;
     locationModal.classList.add("open");
-    setTimeout(function(){ stateSelect.focus(); }, 0);
+
+    const detected = window.__cityMateDetected;
+    if(detected && detected.state){
+        stateSelect.value = detected.state;
+        stateSelect.dispatchEvent(new Event("change"));
+        if(detected.city){
+            setTimeout(function(){ citySelect.value = detected.city; }, 0);
+        }
+        if(detected.area){
+            areaInput.value = detected.area;
+        }
+        setTimeout(function(){ areaInput.focus(); }, 0);
+    } else {
+        setTimeout(function(){ stateSelect.focus(); }, 0);
+    }
 }
 
 function closeLocationModalFn(){
@@ -381,22 +433,163 @@ locationForm.addEventListener("submit", function(e){
         return;
     }
 
-    // Bundle the request — ready to POST to a backend/API once one exists.
+    // Bundle the request and save it as a booking/search entry — this is
+    // also what a backend would eventually receive from this form.
     const searchRequest = {
         service: selectedService,
         state: stateSelect.value,
         city: citySelect.value,
-        area: areaInput.value.trim(),
-        requestedAt: new Date().toISOString()
+        area: areaInput.value.trim()
     };
 
-    console.log("Service provider search request:", searchRequest);
-    // TODO: replace with a real API call, e.g.
-    // fetch("/api/search-providers", { method: "POST", body: JSON.stringify(searchRequest) })
+    CityMateData.addBooking(searchRequest);
 
     closeLocationModalFn();
-    alert("Searching " + searchRequest.service + " providers near " + searchRequest.area + ", " + searchRequest.city + ", " + searchRequest.state + " …");
+
+    const params = new URLSearchParams({
+        service: searchRequest.service,
+        state: searchRequest.state,
+        city: searchRequest.city,
+        area: searchRequest.area
+    });
+    window.location.href = "results.html?" + params.toString();
 });
+
+/* -----------------------------------------------------------------
+   Stat cards — animated count-up, runs once when first scrolled into view
+   ----------------------------------------------------------------- */
+function animateCount(el){
+    const target = parseInt(el.dataset.target, 10);
+    const suffix = el.dataset.suffix || "";
+    const duration = 1200;
+    const start = performance.now();
+
+    function tick(now){
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        el.textContent = Math.round(target * eased) + suffix;
+        if(progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
+
+const statObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+        if(entry.isIntersecting){
+            animateCount(entry.target);
+            statObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.4 });
+
+document.querySelectorAll(".stat-number").forEach(function(el){
+    statObserver.observe(el);
+});
+
+/* -----------------------------------------------------------------
+   Emergency numbers — rendered from EMERGENCY_NUMBERS (app-data.js)
+   ----------------------------------------------------------------- */
+const emergencyGrid = document.getElementById("emergencyGrid");
+if(typeof EMERGENCY_NUMBERS !== "undefined"){
+    EMERGENCY_NUMBERS.forEach(function(item){
+        const a = document.createElement("a");
+        a.className = "emergency-card";
+        a.href = "tel:" + item.number;
+        a.innerHTML =
+            '<span class="emergency-emoji" aria-hidden="true">' + item.emoji + '</span>' +
+            '<span class="emergency-name">' + item.name + '</span>' +
+            '<span class="emergency-number">' + item.number + '</span>';
+        emergencyGrid.appendChild(a);
+    });
+}
+
+/* -----------------------------------------------------------------
+   "Use my current location" — browser geolocation + free reverse
+   geocoding via OpenStreetMap Nominatim (no API key required).
+   Pre-fills the location modal's State/City and jumps straight to
+   the Area field so the user only has to confirm the street/landmark.
+   ----------------------------------------------------------------- */
+const nearMeBtn    = document.getElementById("nearMeBtn");
+const nearMeStatus = document.getElementById("nearMeStatus");
+
+nearMeBtn.addEventListener("click", function(){
+    if(!("geolocation" in navigator)){
+        nearMeStatus.textContent = "Location isn't supported in this browser. Please pick your city manually.";
+        return;
+    }
+
+    nearMeStatus.textContent = "Detecting your location…";
+    nearMeBtn.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+        function(position){
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            reverseGeocode(lat, lng);
+        },
+        function(error){
+            nearMeBtn.disabled = false;
+            if(error.code === error.PERMISSION_DENIED){
+                nearMeStatus.textContent = "Location access denied — you can still pick your city manually below.";
+            } else {
+                nearMeStatus.textContent = "Couldn't detect your location. Please pick your city manually.";
+            }
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+});
+
+function reverseGeocode(lat, lng){
+    const url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=14&addressdetails=1";
+
+    fetch(url, { headers: { "Accept-Language": "en" } })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+            nearMeBtn.disabled = false;
+            const addr = (data && data.address) || {};
+            const cityGuess = addr.city || addr.town || addr.county || addr.state_district || "";
+            const stateGuess = addr.state || "";
+            const areaGuess = addr.suburb || addr.neighbourhood || addr.road || "";
+
+            CityMateData.saveLastLocation({ lat: lat, lng: lng, city: cityGuess, state: stateGuess, label: addr.display_name || "" });
+
+            const matchedState = matchKnownState(stateGuess);
+            const matchedCity = matchKnownCity(matchedState, cityGuess);
+
+            if(matchedState && matchedCity){
+                nearMeStatus.textContent = "Detected: " + matchedCity + ", " + matchedState + ". Choose a service to search nearby.";
+            } else if(stateGuess || cityGuess){
+                nearMeStatus.textContent = "Detected roughly: " + (cityGuess || stateGuess) + ". Pick the closest match in the form when you choose a service.";
+            } else {
+                nearMeStatus.textContent = "Got your coordinates, but couldn't match a known city — please pick one manually.";
+            }
+
+            // Remember the detection so openLocationModal can pre-fill it.
+            window.__cityMateDetected = { state: matchedState, city: matchedCity, area: areaGuess };
+        })
+        .catch(function(){
+            nearMeBtn.disabled = false;
+            nearMeStatus.textContent = "Couldn't reach the location service. Please pick your city manually.";
+        });
+}
+
+function matchKnownState(stateGuess){
+    if(!stateGuess || typeof INDIA_LOCATIONS === "undefined") return null;
+    const keys = Object.keys(INDIA_LOCATIONS);
+    const exact = keys.find(function(k){ return k.toLowerCase() === stateGuess.toLowerCase(); });
+    if(exact) return exact;
+    const partial = keys.find(function(k){ return stateGuess.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(stateGuess.toLowerCase()); });
+    return partial || null;
+}
+
+function matchKnownCity(state, cityGuess){
+    if(!state || !cityGuess || typeof INDIA_LOCATIONS === "undefined") return null;
+    const cities = INDIA_LOCATIONS[state] || [];
+    const exact = cities.find(function(c){ return c.toLowerCase() === cityGuess.toLowerCase(); });
+    if(exact) return exact;
+    const partial = cities.find(function(c){ return cityGuess.toLowerCase().includes(c.toLowerCase()) || c.toLowerCase().includes(cityGuess.toLowerCase()); });
+    return partial || null;
+}
 </script>
 
 </body>

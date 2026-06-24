@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become a Partner — CityMate</title>
+<meta name="description" content="Register as a verified service provider on CityMate and get discovered by users nearby.">
+<link rel="icon" type="image/svg+xml" href="citymate-logo.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css?v=3">
+<script src="india-locations.js"></script>
+<script src="app-data.js"></script>
+</head>
+<body class="partner-page">
+<script>
+    if(localStorage.getItem("citymate_loggedIn") !== "true"){
+        window.location.replace("index.html");
+    }
+</script>
+
+<nav class="page-navbar">
+    <a class="brand" href="dashboard.html">
+        <img src="logo.png" alt="">
+        <span>Citymate</span>
+    </a>
+    <a class="back-link" href="dashboard.html">&larr; Back to dashboard</a>
+</nav>
+
+<div class="partner-wrap">
+
+    <div class="partner-header">
+        <p class="eyebrow">Become a partner</p>
+        <h1>Grow your business with CityMate</h1>
+        <p>List your service, get discovered by people nearby, and start getting calls today.</p>
+    </div>
+
+    <form class="partner-form" id="partnerForm" novalidate>
+        <div class="field">
+            <label for="partnerName">Your name</label>
+            <input id="partnerName" type="text" placeholder="Full name" required>
+        </div>
+        <div class="field">
+            <label for="partnerPhone">Phone number</label>
+            <input id="partnerPhone" type="tel" placeholder="e.g. 98765 43210" pattern="[0-9+\s-]{8,15}" required>
+        </div>
+        <div class="field">
+            <label for="partnerService">Service type</label>
+            <select id="partnerService" required>
+                <option value="" disabled selected>Select a service</option>
+                <option>Plumber</option>
+                <option>Electrician</option>
+                <option>Maid / House Cleaning</option>
+                <option>Carpenter</option>
+                <option>Painter</option>
+                <option>AC Repair</option>
+                <option>Medical Shop / Pharmacy</option>
+                <option>General Store</option>
+                <option>Grocery Delivery</option>
+                <option>Salon / Barber</option>
+                <option>Computer / Mobile Repair</option>
+                <option>Ambulance / Emergency</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="partnerState">State</label>
+            <select id="partnerState" required>
+                <option value="" disabled selected>Select your state</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="partnerCity">City</label>
+            <select id="partnerCity" required disabled>
+                <option value="" disabled selected>Select state first</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="partnerArea">Area / Street</label>
+            <input id="partnerArea" type="text" placeholder="Where do you usually operate?" required>
+        </div>
+        <div class="field">
+            <label for="partnerExperience">Experience (years)</label>
+            <input id="partnerExperience" type="number" min="0" max="60" placeholder="e.g. 5" required>
+        </div>
+
+        <button class="submit-btn" type="submit">Submit application</button>
+    </form>
+
+    <div class="partner-success" id="partnerSuccess">
+        <div class="success-icon">✅</div>
+        <h2>You're listed!</h2>
+        <p id="partnerSuccessText">You'll now show up in search results for your service and city.</p>
+        <a href="dashboard.html">Back to dashboard</a>
+    </div>
+
+</div>
+
+<footer class="dash-footer">
+    &copy; <span id="year"></span> CityMate. Your friend in every city.
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+
+const partnerForm    = document.getElementById("partnerForm");
+const partnerSuccess  = document.getElementById("partnerSuccess");
+const partnerState    = document.getElementById("partnerState");
+const partnerCity     = document.getElementById("partnerCity");
+
+if(typeof INDIA_LOCATIONS !== "undefined"){
+    Object.keys(INDIA_LOCATIONS).sort().forEach(function(state){
+        const opt = document.createElement("option");
+        opt.value = state;
+        opt.textContent = state;
+        partnerState.appendChild(opt);
+    });
+}
+
+function resetCity(placeholder){
+    partnerCity.innerHTML = "";
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.disabled = true;
+    opt.selected = true;
+    opt.textContent = placeholder;
+    partnerCity.appendChild(opt);
+}
+resetCity("Select state first");
+
+partnerState.addEventListener("change", function(){
+    const cities = (typeof INDIA_LOCATIONS !== "undefined" && INDIA_LOCATIONS[partnerState.value]) || [];
+    resetCity("Select your city");
+    partnerCity.disabled = cities.length === 0;
+    cities.forEach(function(city){
+        const opt = document.createElement("option");
+        opt.value = city;
+        opt.textContent = city;
+        partnerCity.appendChild(opt);
+    });
+});
+
+partnerForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    if(!partnerForm.checkValidity()){
+        partnerForm.reportValidity();
+        return;
+    }
+
+    const provider = {
+        name: document.getElementById("partnerName").value.trim(),
+        phone: document.getElementById("partnerPhone").value.trim(),
+        service: document.getElementById("partnerService").value,
+        state: partnerState.value,
+        city: partnerCity.value,
+        area: document.getElementById("partnerArea").value.trim(),
+        experience: parseInt(document.getElementById("partnerExperience").value, 10) || 0
+    };
+
+    CityMateData.addProvider(provider);
+
+    document.getElementById("partnerSuccessText").textContent =
+        provider.name + ", you'll now show up in " + provider.service + " search results for " + provider.city + ".";
+
+    partnerForm.classList.add("hide");
+    partnerSuccess.classList.add("show");
+});
+</script>
+
+</body>
+</html>
