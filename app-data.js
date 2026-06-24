@@ -148,6 +148,10 @@ const CityMateData = (function () {
     });
   }
 
+  function getProviderById(providerId) {
+    return getAllProviders().find(function (p) { return p.id === providerId; }) || null;
+  }
+
   /* ---------------- Bookings / search history ---------------- */
 
   function getBookings() {
@@ -197,6 +201,8 @@ const CityMateData = (function () {
     return readJSON(KEYS.profile, {
       fullName: localStorage.getItem("citymate_userFullName") || "",
       email: localStorage.getItem("citymate_userEmail") || "",
+      phone: "",
+      address: "",
       addresses: []
     });
   }
@@ -223,10 +229,27 @@ const CityMateData = (function () {
     writeJSON(KEYS.geo, loc);
   }
 
+  /* ---------------- Session ---------------- */
+
+  // Called on logout. Clears the login flag plus anything that identifies
+  // *who* is logged in (name/email/profile), so a stale name/avatar from
+  // the previous session can never flash on screen for the next person to
+  // use this device, and the guarded pages immediately deny access again.
+  // Deliberately leaves booking history / reviews / partner listings
+  // alone — those are this device's marketplace data, not session state,
+  // and shouldn't disappear just because someone logged out.
+  function clearSession() {
+    localStorage.setItem("citymate_loggedIn", "false");
+    localStorage.removeItem("citymate_userEmail");
+    localStorage.removeItem("citymate_userFullName");
+    localStorage.removeItem(KEYS.profile);
+  }
+
   return {
     getAllProviders: getAllProviders,
     addProvider: addProvider,
     findProviders: findProviders,
+    getProviderById: getProviderById,
     getBookings: getBookings,
     addBooking: addBooking,
     getReviews: getReviews,
@@ -235,6 +258,7 @@ const CityMateData = (function () {
     saveProfile: saveProfile,
     addAddress: addAddress,
     getLastLocation: getLastLocation,
-    saveLastLocation: saveLastLocation
+    saveLastLocation: saveLastLocation,
+    clearSession: clearSession
   };
 })();

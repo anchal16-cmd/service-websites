@@ -1617,3 +1617,77 @@ body.partner-page .partner-success a{
 @media (max-width: 480px){
     body.dashboard .stats-grid{ grid-template-columns:1fr; }
 }
+
+/* ===================================================================
+   UPGRADE PASS 3 — auth/session helpers, profile phone+address fields,
+   booking confirmation modal, WhatsApp contact button. All additive;
+   nothing above this point was edited or removed.
+   =================================================================== */
+
+/* --- Provider card actions: Call + WhatsApp share a row, Book Now
+   gets its own full-width row underneath so all three stay easy to
+   tap on mobile instead of competing for space in one line. --------- */
+body.results-page .provider-card .provider-actions + .provider-actions{
+    margin-top:-2px;
+}
+
+body.results-page .whatsapp-btn{
+    background:rgba(30,158,107,0.14);
+    color:var(--green);
+    border:1.5px solid rgba(30,158,107,0.4) !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+}
+
+body.results-page .whatsapp-btn:hover{
+    background:rgba(30,158,107,0.22);
+    border-color:var(--green) !important;
+}
+
+body.results-page .provider-actions .book-btn{ width:100%; }
+
+/* --- Booking confirmation modal -------------------------------------
+   Reuses .form-container / .card / .submit-btn so it matches every
+   other popup on the site (review modal, login/signup, location form). */
+.booking-confirm-card{ max-width:420px; text-align:left; }
+
+.booking-confirm-summary{
+    background:var(--card-field);
+    border:1px solid var(--card-border);
+    border-radius:var(--radius-md);
+    padding:14px 16px;
+    margin:14px 0 20px;
+}
+
+.booking-confirm-summary p{ margin:0; }
+.booking-confirm-summary p + p{ margin-top:4px; color:var(--card-ink-soft); font-size:13.5px; }
+
+.booking-confirm-actions{
+    display:flex;
+    gap:12px;
+}
+
+.booking-confirm-actions .submit-btn,
+.booking-confirm-actions .cancel-btn{
+    flex:1;
+    margin-top:0;
+}
+
+.booking-confirm-actions .cancel-btn{
+    background:none;
+    border:1.5px solid var(--card-border);
+    color:var(--card-ink);
+    border-radius:var(--radius-md);
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    padding:12px;
+}
+
+.booking-confirm-actions .cancel-btn:hover{ border-color:var(--navy); }
+
+@media (max-width: 480px){
+    .booking-confirm-actions{ flex-direction:column-reverse; }
+}

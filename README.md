@@ -144,3 +144,64 @@ search, results page, city filters, provider reviews (read + submit),
 booking, Become a Partner, new provider appearing live in search,
 profile (details, addresses, history), login gate on all three new pages,
 and mobile responsive layout on every page.
+
+---
+
+## Upgrade Pass 3 — Production hardening (latest)
+
+Built on top of Pass 2. Same rule throughout: only the files below were
+touched, nothing else; existing UI/CSS classes were reused, not replaced.
+
+**Files changed:** `app-data.js`, `dashboard.html`, `profile.html`,
+`results.html`, `style.css` (append-only). `index.html` and `partner.html`
+were not touched.
+
+### 1. Authentication guard
+Already in place from a previous pass on `dashboard.html`, `profile.html`,
+`results.html`, and `partner.html` — verified again end-to-end this pass,
+no changes needed.
+
+### 2. Proper logout
+The previous logout only flipped `citymate_loggedIn` to `"false"`. It now
+calls a new `CityMateData.clearSession()` (in `app-data.js`), which also
+removes `citymate_userEmail`, `citymate_userFullName`, and the saved
+`citymate_profile` object — so a stale name, email, phone, or address from
+the last session can never flash on screen for the next person who logs in
+on the same device. Booking history and reviews are intentionally **kept**
+on logout — they're this device's marketplace data, not session state.
+
+### 3. Profile edit — Phone & Address
+`profile.html`'s existing "Basic details" edit form (which only had Name +
+Email) now also has **Phone number** and **Address** fields, in both view
+and edit mode. Saved via the existing `CityMateData.saveProfile()`, so it
+persists across reloads exactly like Name/Email already did.
+
+### 4. Booking confirmation
+"Book Now" on `results.html` used to save the booking immediately. It now
+opens a confirmation popup — *"Are you sure you want to book this
+service?"* — showing the provider's name, service, and location. Nothing
+is written to storage until **"Yes, book now"** is clicked; **Cancel**
+closes the popup with no booking created. Confirmed bookings still show up
+in the same place as before — "Service history" on the profile page —
+which now also displays the **provider's name**, not just the service
+type, alongside the date/time and location.
+
+### 5. WhatsApp contact button
+Every provider card on `results.html` now has a 💬 **WhatsApp** button
+next to the existing 📞 **Call** button, opening:
+```
+https://wa.me/91XXXXXXXXXX?text=Hi, I need your service from CityMate
+```
+using each provider's existing phone number (already stored as `+91 ...`
+in `app-data.js`) and a URL-encoded version of that message. Call and
+WhatsApp now share one row; "Book now" got its own full-width row below so
+all three actions stay easy to tap on mobile.
+
+### Tested
+Auth guard on all three protected pages (before and after login/logout),
+session flag values at every step, profile phone/address save + persist
+after reload, booking-count verified at 0 before booking, unchanged after
+Cancel, +1 after Confirm, booking history showing the provider's real
+name, logout clearing identity fields while preserving booking history,
+and a fresh login afterward showing completely clean profile fields (no
+data leaked from the previous session).

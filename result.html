@@ -72,6 +72,23 @@
     </div>
 </div>
 
+<!-- Booking confirmation modal: shown before a booking is actually saved -->
+<div id="bookingConfirmModal" class="form-container" role="dialog" aria-modal="true" aria-labelledby="bookingConfirmTitle">
+    <div class="card booking-confirm-card">
+        <span class="close-btn" id="closeBookingConfirm" role="button" tabindex="0" aria-label="Close">&times;</span>
+
+        <h2 id="bookingConfirmTitle">Confirm booking</h2>
+        <p class="sub" id="bookingConfirmSub">Are you sure you want to book this service?</p>
+
+        <div class="booking-confirm-summary" id="bookingConfirmSummary"></div>
+
+        <div class="booking-confirm-actions">
+            <button type="button" class="cancel-btn" id="cancelBookingBtn">Cancel</button>
+            <button type="button" class="submit-btn" id="confirmBookingBtn">Yes, book now</button>
+        </div>
+    </div>
+</div>
+
 <footer class="dash-footer">
     &copy; <span id="year"></span> CityMate. Your friend in every city.
 </footer>
@@ -105,6 +122,8 @@ function renderStars(rating){
 function renderProviderCard(p){
     const card = document.createElement("article");
     card.className = "provider-card";
+    const digitsOnly = p.phone.replace(/[^0-9]/g, ""); // wa.me needs digits only, country code included
+    const waMessage = encodeURIComponent("Hi, I need your service from CityMate");
     card.innerHTML =
         '<div class="provider-top">' +
             '<div>' +
@@ -120,7 +139,10 @@ function renderProviderCard(p){
         '<p class="provider-meta">📍 ' + [p.area, p.city].filter(Boolean).join(", ") + '</p>' +
         '<p class="provider-experience">' + p.experience + '+ years experience</p>' +
         '<div class="provider-actions">' +
-            '<a class="call-btn" href="tel:' + p.phone.replace(/\s+/g, "") + '">📞 Call now</a>' +
+            '<a class="call-btn" href="tel:' + p.phone.replace(/\s+/g, "") + '">📞 Call</a>' +
+            '<a class="whatsapp-btn" href="https://wa.me/' + digitsOnly + '?text=' + waMessage + '" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>' +
+        '</div>' +
+        '<div class="provider-actions">' +
             '<button class="book-btn" type="button" data-book="' + p.id + '">Book now</button>' +
         '</div>';
     return card;
@@ -224,7 +246,7 @@ function renderReviews(providerId){
 }
 
 function openProviderModal(providerId, intent){
-    const provider = CityMateData.getAllProviders().find(function(p){ return p.id === providerId; });
+    const provider = CityMateData.getProviderById(providerId);
     if(!provider) return;
 
     activeProviderId = providerId;
@@ -255,9 +277,60 @@ resultsList.addEventListener("click", function(e){
         e.preventDefault();
         openProviderModal(link.dataset.openProvider, "view");
     } else if(bookBtn){
-        CityMateData.addBooking({ providerId: bookBtn.dataset.book, service: service, city: cityQ, area: areaQ, status: "booked" });
-        openProviderModal(bookBtn.dataset.book, "book");
+        openBookingConfirm(bookBtn.dataset.book);
     }
+});
+
+/* -----------------------------------------------------------------
+   Booking confirmation modal — "Are you sure you want to book this
+   service?" Only on explicit confirmation is the booking actually
+   saved (via CityMateData.addBooking) and the success/review modal
+   shown. Cancelling closes the popup with nothing saved.
+   ----------------------------------------------------------------- */
+const bookingConfirmModal   = document.getElementById("bookingConfirmModal");
+const bookingConfirmSummary = document.getElementById("bookingConfirmSummary");
+const closeBookingConfirm   = document.getElementById("closeBookingConfirm");
+const cancelBookingBtn      = document.getElementById("cancelBookingBtn");
+const confirmBookingBtn     = document.getElementById("confirmBookingBtn");
+
+let pendingProviderId = null;
+
+function openBookingConfirm(providerId){
+    const provider = CityMateData.getProviderById(providerId);
+    if(!provider) return;
+
+    pendingProviderId = providerId;
+    bookingConfirmSummary.innerHTML =
+        '<p><strong>' + provider.name + '</strong></p>' +
+        '<p>' + provider.service + ' &middot; ' + [provider.area, provider.city].filter(Boolean).join(", ") + '</p>';
+    bookingConfirmModal.classList.add("open");
+}
+
+function closeBookingConfirmFn(){
+    bookingConfirmModal.classList.remove("open");
+    pendingProviderId = null;
+}
+
+closeBookingConfirm.addEventListener("click", closeBookingConfirmFn);
+cancelBookingBtn.addEventListener("click", closeBookingConfirmFn);
+bookingConfirmModal.addEventListener("click", function(e){ if(e.target === bookingConfirmModal) closeBookingConfirmFn(); });
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && bookingConfirmModal.classList.contains("open")) closeBookingConfirmFn(); });
+
+confirmBookingBtn.addEventListener("click", function(){
+    if(!pendingProviderId) return;
+    const providerId = pendingProviderId;
+
+    // Booking is only written to storage now, after explicit confirmation.
+    CityMateData.addBooking({
+        providerId: providerId,
+        service: service,
+        city: cityQ,
+        area: areaQ,
+        status: "booked"
+    });
+
+    closeBookingConfirmFn();
+    openProviderModal(providerId, "book");
 });
 
 submitReviewBtn.addEventListener("click", function(){

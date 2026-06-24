@@ -24,6 +24,18 @@
     if(localStorage.getItem("citymate_loggedIn") !== "true"){
         window.location.replace("index.html");
     }
+
+    // Logout: clears the session flag and any stored profile identity
+    // (name/email), then sends the user back to the landing page. Bound
+    // to the navbar "Logout" link's onclick; the href="index.html" on
+    // that link still works as a no-JS fallback. Booking history and
+    // reviews are intentionally kept — see CityMateData.clearSession.
+    function citymateLogout(event){
+        if(event) event.preventDefault();
+        CityMateData.clearSession();
+        window.location.href = "index.html";
+        return false;
+    }
 </script>
 
 <nav class="navbar">
@@ -62,7 +74,7 @@
         <a href="#explore">Explore City</a>
         <a href="partner.html">Become a Partner</a>
         <a href="profile.html">Profile</a>
-        <a href="index.html" class="logout">Logout</a>
+        <a href="index.html" class="logout" onclick="return citymateLogout(event)">Logout</a>
     </div>
 
 </nav>
