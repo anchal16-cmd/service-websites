@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Signup - CityMate</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>CityMate</h1>
+        <p class="tagline">Your First Friend in Every City</p>
+
+        <h2>Create Provider Account</h2>
+
+        <form action="provider-dashboard.html">
+
+            <input type="text" placeholder="Full Name" required>
+
+            <input type="email" placeholder="Email Address" required>
+
+            <input type="tel" placeholder="Phone Number" required>
+
+            <input type="password" placeholder="Password" required>
+
+            <input type="password" placeholder="Confirm Password" required>
+
+            <select required>
+                <option value="">Select Service Category</option>
+                <option>Plumber</option>
+                <option>Electrician</option>
+                <option>Carpenter</option>
+                <option>Painter</option>
+                <option>Maid</option>
+                <option>Salon</option>
+                <option>AC Repair</option>
+                <option>Computer Repair</option>
+            </select>
+
+            <input type="number" placeholder="Experience (Years)" required>
+
+            <select id="state" required>
+                <option value="">Select State</option>
+                <option value="MP">Madhya Pradesh</option>
+                <option value="UP">Uttar Pradesh</option>
+                <option value="MH">Maharashtra</option>
+                <option value="RJ">Rajasthan</option>
+            </select>
+
+            <select id="city" required>
+                <option value="">Select City</option>
+            </select>
+
+            <input type="text" placeholder="Area" required>
+
+            <button type="submit">
+                Register as Provider
+            </button>
+
+        </form>
+
+        <p class="link">
+            Already have an account?
+            <a href="provider-login.html">Login</a>
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+const cities = {
+    MP:["Indore","Bhopal","Gwalior","Jabalpur"],
+    UP:["Lucknow","Kanpur","Agra","Varanasi"],
+    MH:["Mumbai","Pune","Nagpur","Nashik"],
+    RJ:["Jaipur","Jodhpur","Udaipur","Kota"]
+};
+
+const stateSelect = document.getElementById("state");
+const citySelect = document.getElementById("city");
+
+stateSelect.addEventListener("change", function(){
+
+    citySelect.innerHTML =
+    '<option value="">Select City</option>';
+
+    const selectedState = this.value;
+
+    if(cities[selectedState]){
+
+        cities[selectedState].forEach(city => {
+
+            const option =
+            document.createElement("option");
+
+            option.value = city;
+            option.textContent = city;
+
+            citySelect.appendChild(option);
+
+        });
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
