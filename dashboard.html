@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CityMate | Your First Friend in Every City</title>
+    <meta name="description" content="CityMate user dashboard - find trusted local services, shops, and more." />
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+
+    <!-- ============================= -->
+    <!-- STICKY HEADER -->
+    <!-- ============================= -->
+    <header class="app-header" id="appHeader">
+        <div class="header-inner">
+
+            <!-- Left: Logo -->
+            <div class="header-left">
+                <a href="#" class="logo" aria-label="CityMate Home">
+                <span class="logo-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                </span>
+
+                <span class="logo-text">
+                <span class="city">City</span><span class="mate">Mate</span>
+               </span>
+               </a>
+            </div>
+    <!-- ============================= -->
+    <!-- Center: Location Dropdown -->
+    <!-- Center: Location Search -->
+    <!-- ============================= -->
+        <div class="header-center">
+         
+            <div class="location-search">
+                <i class="fa-solid fa-location-dot location-pin"></i>
+        <input
+            type="text"
+            id="location"
+            placeholder="Search city, area or street..."
+            autocomplete="off">
+
+        <ul id="suggestions"></ul>
+
+    </div>
+
+</div>
+            <!-- Right: Notification + Profile -->
+            <div class="header-right">
+                <button class="icon-btn notification-btn" id="notificationBtn" aria-label="Notifications">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                </button>
+
+                <button class="profile-btn" id="profileBtn" aria-label="User profile">
+                    <img src="https://i.pravatar.cc/100?img=12" alt="Radhe's profile avatar" class="profile-avatar" />
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- ============================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================= -->
+    <main class="app-main">
+
+        <!-- Greeting Section -->
+        <section class="greeting-section fade-in">
+            <h1 class="greeting-text">
+                <span id="greetingMessage">Good Evening</span>, <span id="userName">Radhe</span>
+                <span class="wave-emoji" aria-hidden="true">👋</span>
+            </h1>
+            <p class="greeting-subtext">What do you need today?</p>
+        </section>
+
+        <!-- Search Bar -->
+        <section class="search-section fade-in">
+            <div class="search-bar" id="searchBar">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search for services, places..."
+                    autocomplete="off"
+                    aria-label="Search for services or places"
+                />
+                <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear search">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <ul class="search-suggestions" id="searchSuggestions"></ul>
+        </section>
+
+        <!-- Feature Grid -->
+        <section class="feature-grid-section slide-up">
+            <div class="feature-grid" id="featureGrid">
+
+                <button class="feature-card card-local-services" data-card="local-services">
+                    <span class="feature-icon-wrap">
+                        <i class="fa-solid fa-wrench"></i>
+                    </span>
+                    <h3 class="feature-title">Local Services</h3>
+                    <p class="feature-desc">Find trusted professionals</p>
+                </button>
+
+                <button class="feature-card card-nearby-shops" data-card="nearby-shops">
+                    <span class="feature-icon-wrap">
+                        <i class="fa-solid fa-shop"></i>
+                    </span>
+                    <h3 class="feature-title">Nearby Shops</h3>
+                    <p class="feature-desc">Groceries, medical, more</p>
+                </button>
+
+                <button class="feature-card card-emergency" data-card="emergency">
+                    <span class="feature-icon-wrap">
+                        <i class="fa-solid fa-truck-medical"></i>
+                    </span>
+                    <h3 class="feature-title">Emergency</h3>
+                    <p class="feature-desc">Help in urgent situations</p>
+                </button>
+
+                <button class="feature-card card-explore-area" data-card="explore-area">
+                    <span class="feature-icon-wrap">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </span>
+                    <h3 class="feature-title">Explore Area</h3>
+                    <p class="feature-desc">Places to visit, hospitals, schools</p>
+                </button>
+
+                <button class="feature-card card-food-restaurants" data-card="food-restaurants">
+                    <span class="feature-icon-wrap">
+                        <i class="fa-solid fa-utensils"></i>
+                    </span>
+                    <h3 class="feature-title">Food &amp; Restaurants</h3>
+                    <p class="feature-desc">Discover best food around you</p>
+                </button>
+
+                <button class="feature-card card-transport" data-card="transport">
+                    <span class="feature-icon-wrap">
+                        <i class="fa-solid fa-car-side"></i>
+                    </span>
+                    <h3 class="feature-title">Transport</h3>
+                    <p class="feature-desc">Auto, Cab, Bus, more</p>
+                </button>
+
+            </div>
+        </section>
+
+        <!-- Popular Services -->
+        <section class="popular-services-section slide-up">
+            <div class="section-heading">
+                <h2>Popular Services</h2>
+                <button class="view-all-btn" id="viewAllBtn">
+                    View All <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="popular-services-scroller" id="popularServicesScroller">
+
+                <button class="service-pill" data-service="plumber">
+                    <span class="service-pill-icon icon-bg-1">
+                        <i class="fa-solid fa-faucet-drip"></i>
+                    </span>
+                    <span class="service-pill-label">Plumber</span>
+                </button>
+
+                <button class="service-pill" data-service="electrician">
+                    <span class="service-pill-icon icon-bg-2">
+                        <i class="fa-solid fa-bolt"></i>
+                    </span>
+                    <span class="service-pill-label">Electrician</span>
+                </button>
+
+                <button class="service-pill" data-service="carpenter">
+                    <span class="service-pill-icon icon-bg-3">
+                        <i class="fa-solid fa-hammer"></i>
+                    </span>
+                    <span class="service-pill-label">Carpenter</span>
+                </button>
+
+                <button class="service-pill" data-service="painter">
+                    <span class="service-pill-icon icon-bg-4">
+                        <i class="fa-solid fa-paint-roller"></i>
+                    </span>
+                    <span class="service-pill-label">Painter</span>
+                </button>
+
+                <button class="service-pill" data-service="maid">
+                    <span class="service-pill-icon icon-bg-5">
+                        <i class="fa-solid fa-broom"></i>
+                    </span>
+                    <span class="service-pill-label">Maid</span>
+                </button>
+
+                <button class="service-pill" data-service="more">
+                    <span class="service-pill-icon icon-bg-more">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </span>
+                    <span class="service-pill-label">More</span>
+                </button>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================= -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ============================= -->
+    <nav class="bottom-nav" id="bottomNav" aria-label="Primary">
+        <button class="nav-item active" data-nav="home">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" data-nav="services">
+            <i class="fa-solid fa-grip"></i>
+            <span>Services</span>
+        </button>
+        <button class="nav-item" data-nav="explore">
+            <i class="fa-solid fa-compass"></i>
+            <span>Explore</span>
+        </button>
+        <button class="nav-item" data-nav="chat">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span>Chat</span>
+        </button>
+        <button class="nav-item" data-nav="profile">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- Custom JavaScript -->
+    <script src="dashboard.js"></script>
+</body>
+</html>
