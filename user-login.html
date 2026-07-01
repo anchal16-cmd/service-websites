@@ -1,101 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>User Login - CityMate</title>
-
-<link rel="stylesheet" href="auth.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Signup - CityMate</title>
+    <link rel="stylesheet" href="signup.css">
 </head>
 <body>
 
-<div class="login-container user-theme">
+<div class="container">
 
-    <div class="top-bar">
-        <a href="index.html">
-            <i class="fas fa-chevron-left"></i> Back
-        </a>
+    <div class="card">
 
-        <a href="#">
-            Need Help? <i class="fas fa-circle-question"></i>
-        </a>
+        <h1>CityMate</h1>
+        <p class="tagline">Your First Friend in Every City</p>
+
+        <h2>Create User Account</h2>
+
+        <form id="userSignupForm">
+
+            <input
+                type="text"
+                id="userName"
+                placeholder="Full Name"
+                required>
+
+            <input
+                type="email"
+                id="userEmail"
+                placeholder="Email Address"
+                required>
+
+            <input
+                type="tel"
+                id="userPhone"
+                placeholder="Phone Number"
+                required>
+
+            <input
+                type="password"
+                id="userPassword"
+                placeholder="Password"
+                required>
+
+            <input
+                type="password"
+                id="userConfirmPassword"
+                placeholder="Confirm Password"
+                required>
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="link">
+            Already have an account?
+            <a href="user-login.html">Login</a>
+        </p>
+
     </div>
-
-    <div class="profile-icon">
-        <i class="fas fa-user"></i>
-    </div>
-
-    <h1>Welcome Back!</h1>
-
-    <p class="subtitle">
-        Login to continue as a User
-    </p>
-
-    <form>
-
-        <label>Email or Phone</label>
-
-        <input type="text"
-        placeholder="Enter email or phone number">
-
-        <label>Password</label>
-
-        <div class="password-box">
-
-            <input type="password"
-            placeholder="Enter your password">
-
-            <i class="fas fa-eye"></i>
-
-        </div>
-
-        <div class="options">
-
-            <label>
-                <input type="checkbox">
-                Remember me
-            </label>
-
-            <a href="#">
-                Forgot Password?
-            </a>
-
-        </div>
-
-        <button type="submit" class="login-btn">
-            Login as User
-        </button>
-
-    </form>
-
-    <div class="divider">
-        <span>or</span>
-    </div>
-
-    <button class="google-btn">
-
-        <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png">
-
-        Continue with Google
-
-    </button>
-
-    <p class="signup-text">
-
-        Don't have an account?
-
-        <a href="signup.html">
-            Sign Up
-        </a>
-
-    </p>
 
 </div>
+
+<script type="module" src="user-signup.js"></script>
 
 </body>
 </html>

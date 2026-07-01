@@ -1,101 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Provider Login - CityMate</title>
-
-<link rel="stylesheet" href="auth.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Signup - CityMate</title>
+    <link rel="stylesheet" href="signup.css">
 </head>
 <body>
 
-<div class="login-container provider-theme">
+<div class="container">
 
-    <div class="top-bar">
-        <a href="index.html">
-            <i class="fas fa-chevron-left"></i> Back
-        </a>
+    <div class="card">
 
-        <a href="#">
-            Need Help? <i class="fas fa-circle-question"></i>
-        </a>
+        <h1>CityMate</h1>
+        <p class="tagline">Your First Friend in Every City</p>
+
+        <h2>Create Provider Account</h2>
+
+        <form id="providerSignupForm">
+
+            <input
+                type="text"
+                id="providerName"
+                placeholder="Full Name"
+                required>
+
+            <input
+                type="email"
+                id="providerEmail"
+                placeholder="Email Address"
+                required>
+
+            <input
+                type="tel"
+                id="providerPhone"
+                placeholder="Phone Number"
+                required>
+
+            <input
+                type="password"
+                id="providerPassword"
+                placeholder="Password"
+                required>
+
+            <input
+                type="password"
+                id="providerConfirmPassword"
+                placeholder="Confirm Password"
+                required>
+
+            <select id="serviceCategory" required>
+                <option value="">Select Service Category</option>
+                <option>Plumber</option>
+                <option>Electrician</option>
+                <option>Carpenter</option>
+                <option>Painter</option>
+                <option>Maid</option>
+                <option>Salon</option>
+                <option>AC Repair</option>
+                <option>Computer Repair</option>
+            </select>
+
+            <input
+                type="number"
+                id="experience"
+                placeholder="Experience (Years)"
+                required>
+
+            <select id="state" required>
+                <option value="">Select State</option>
+                <option value="MP">Madhya Pradesh</option>
+                <option value="UP">Uttar Pradesh</option>
+                <option value="MH">Maharashtra</option>
+                <option value="RJ">Rajasthan</option>
+            </select>
+
+            <select id="city" required>
+                <option value="">Select City</option>
+            </select>
+
+            <input
+                type="text"
+                id="area"
+                placeholder="Area"
+                required>
+
+            <button type="submit">
+                Register as Provider
+            </button>
+
+        </form>
+
+        <p class="link">
+            Already have an account?
+            <a href="provider-login.html">Login</a>
+        </p>
+
     </div>
-
-    <div class="profile-icon">
-        <i class="fas fa-hard-hat"></i>
-    </div>
-
-    <h1>Welcome Back!</h1>
-
-    <p class="subtitle">
-        Login to continue as a Service Provider
-    </p>
-
-    <form>
-
-        <label>Email or Phone</label>
-
-        <input type="text"
-        placeholder="Enter email or phone number">
-
-        <label>Password</label>
-
-        <div class="password-box">
-
-            <input type="password"
-            placeholder="Enter your password">
-
-            <i class="fas fa-eye"></i>
-
-        </div>
-
-        <div class="options">
-
-            <label>
-                <input type="checkbox">
-                Remember me
-            </label>
-
-            <a href="#">
-                Forgot Password?
-            </a>
-
-        </div>
-
-        <button type="submit" class="login-btn">
-            Login as Provider
-        </button>
-
-    </form>
-
-    <div class="divider">
-        <span>or</span>
-    </div>
-
-    <button class="google-btn">
-
-        <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png">
-
-        Continue with Google
-
-    </button>
-
-    <p class="signup-text">
-
-        Don't have an account?
-
-        <a href="provider-signup.html">
-            Sign Up
-        </a>
-
-    </p>
 
 </div>
+
+<script>
+const cities = {
+    MP:["Indore","Bhopal","Gwalior","Jabalpur"],
+    UP:["Lucknow","Kanpur","Agra","Varanasi"],
+    MH:["Mumbai","Pune","Nagpur","Nashik"],
+    RJ:["Jaipur","Jodhpur","Udaipur","Kota"]
+};
+
+const stateSelect = document.getElementById("state");
+const citySelect = document.getElementById("city");
+
+stateSelect.addEventListener("change", function(){
+
+    citySelect.innerHTML =
+    '<option value="">Select City</option>';
+
+    const selectedState = this.value;
+
+    if(cities[selectedState]){
+
+        cities[selectedState].forEach(city => {
+
+            const option =
+            document.createElement("option");
+
+            option.value = city;
+            option.textContent = city;
+
+            citySelect.appendChild(option);
+
+        });
+
+    }
+
+});
+</script>
+
+<script type="module" src="provider-signup.js"></script>
 
 </body>
 </html>
