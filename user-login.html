@@ -3,68 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Signup - CityMate</title>
-    <link rel="stylesheet" href="signup.css">
+    <title>User Login - CityMate</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-<div class="container">
+<div class="login-container user-theme">
 
-    <div class="card">
+    <div class="top-bar">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <a href="user-signup.html">New here? Sign up</a>
+    </div>
 
-        <h1>CityMate</h1>
-        <p class="tagline">Your First Friend in Every City</p>
+    <div class="profile-icon">
+        <i class="fa-solid fa-user"></i>
+    </div>
 
-        <h2>Create User Account</h2>
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Login to find trusted services in your city</p>
 
-        <form id="userSignupForm">
+    <form id="userLoginForm">
 
-            <input
-                type="text"
-                id="userName"
-                placeholder="Full Name"
-                required>
+        <label for="userEmail">Email Address</label>
+        <input
+            type="email"
+            id="userEmail"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required>
 
-            <input
-                type="email"
-                id="userEmail"
-                placeholder="Email Address"
-                required>
-
-            <input
-                type="tel"
-                id="userPhone"
-                placeholder="Phone Number"
-                required>
-
+        <label for="userPassword">Password</label>
+        <div class="password-box">
             <input
                 type="password"
                 id="userPassword"
-                placeholder="Password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
                 required>
+            <i class="fa-solid fa-eye" id="toggleUserPassword"></i>
+        </div>
 
-            <input
-                type="password"
-                id="userConfirmPassword"
-                placeholder="Confirm Password"
-                required>
+        <div class="options">
+            <label>
+                <input type="checkbox" id="rememberMe">
+                Remember me
+            </label>
+            <a href="#" id="forgotPasswordLink">Forgot password?</a>
+        </div>
 
-            <button type="submit">
-                Create Account
-            </button>
+        <p class="form-error" id="userLoginError"></p>
 
-        </form>
+        <button type="submit" class="login-btn" id="userLoginBtn">
+            Login
+        </button>
 
-        <p class="link">
-            Already have an account?
-            <a href="user-login.html">Login</a>
-        </p>
+    </form>
 
-    </div>
+    <div class="divider">or</div>
+
+    <button type="button" class="google-btn" id="userGoogleLoginBtn">
+        <i class="fa-brands fa-google"></i>
+        Continue with Google
+    </button>
+
+    <p class="signup-text">
+        Don't have an account?
+        <a href="user-signup.html">Create one</a>
+    </p>
 
 </div>
 
-<script type="module" src="user-signup.js"></script>
+<script type="module" src="user-login.js"></script>
 
 </body>
 </html>

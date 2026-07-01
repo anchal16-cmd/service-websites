@@ -1,16 +1,37 @@
 # CityMate — "Your First Friend in Every City"
 
-CityMate ek local-services discovery website hai jo naye shehar me aane wale logon ko trusted service providers (plumber, electrician, carpenter, painter, maid, etc.) aur nearby shops/hospitals/transport se connect karta hai. Website me do roles hain — **User** (jo service dhundh raha hai) aur **Provider** (jo service de raha hai) — dono ke apne alag signup/login flow hain, Firebase Authentication + Firestore ke saath.
+CityMate ek local-services discovery website hai jo naye shehar me aane wale logon ko trusted service providers (plumber, electrician, carpenter, painter, maid, etc.) se connect karta hai. Do roles hain — **User** (jo service dhundh raha hai) aur **Provider** (jo service de raha hai) — Firebase Authentication + Firestore ke saath.
 
 ---
 
+## ✅ What changed in this update
+
+Analysis me kaafi bugs mile the, sabse bada issue ye tha ki **login pages actually signup forms the** (aur asli signup pages non-functional plain HTML the, koi Firebase connection nahi). Sab fix kar diya gaya hai:
+
+| Area | Before | After |
+|---|---|---|
+| `user-login.html` | Signup form ka duplicate, koi login logic nahi | Real login form, `user-login.js` se properly connected |
+| `provider-login.html` | Signup form ka duplicate | Real login form, provider theme |
+| `user-signup.html` | Plain HTML form, no `id`s, no Firebase | Real signup form wired to `user-signup.js` |
+| `provider-signup.html` | Plain HTML form, no `id`s | Real signup form wired to `provider-signup.js`, state→city dropdown intact |
+| `dashboard.js` | Called `initLocationDropdown()` which didn't exist → console error | Function properly defined, wrapped, null-safe |
+| Dashboard auth | Hardcoded name `"Radhe"`, no login check | Real Firebase auth-guard — redirects to login if not signed in, greets by real name from Firestore |
+| Logout | Missing everywhere | Logout button added to user dashboard + provider dashboard |
+| `local-services.html` | Linked to `plumber.html`, `electrician.html`, etc. — **none of these existed** | Links to new `providers.html?service=...` which loads real providers from Firestore |
+| Provider dashboard | Referenced (`provider-dashboard.html`) but never existed | Built: shows the provider's own profile, guarded by auth |
+| Error handling | Everything used blocking `alert()` | Inline, styled error messages on all forms |
+| Password fields | No visibility toggle | Eye-icon toggle added on login forms |
+| Extra | — | "Forgot password" (Firebase reset email), Google sign-in on user login, "remember me", Firestore security rules file |
+
 ## 🚀 Features
 
-- **Landing Page (`index.html`)** — Hero section, role selection (User / Provider), platform stats.
-- **User Auth** — Signup (`user-signup.html`) & Login (`user-login.html`) using Firebase Email/Password auth. User data (name, email, phone, role) Firestore ke `users` collection me save hota hai.
-- **Provider Auth** — Signup (`provider-signup.html`) & Login (`provider-login.html`) with extra fields: service category, experience, state, city, area. Data Firestore ke `providers` collection me save hota hai.
-- **User Dashboard (`dashboard.html`)** — Dynamic greeting (Good Morning/Afternoon/Evening), location search (OpenStreetMap Nominatim API se live suggestions), global search bar (services/places directory), feature grid (Local Services, Nearby Shops, Emergency, Explore Area, Food & Restaurants, Transport), popular service pills, notification badge, bottom navigation, aur micro-interactions (ripple effect, bounce animation).
-- **Local Services Listing (`local-services.html`)** — Plumber, Electrician, Maid, Carpenter, Painter ki list.
+- **Landing Page (`index.html`)** — Hero, role selection (User / Provider), stats.
+- **User Auth** — Signup & Login with Firebase Email/Password, plus Google sign-in and password reset on login.
+- **Provider Auth** — Signup (service category, experience, state → city cascade, area) & Login.
+- **User Dashboard (`dashboard.html`)** — Dynamic greeting with real name, location search (OpenStreetMap Nominatim), global search, feature grid, popular service pills (now deep-link to real provider listings), notifications, bottom nav, logout.
+- **Local Services → Providers** — Browsing a category (e.g. Plumber) queries Firestore live and shows real registered providers with call/email actions.
+- **Provider Dashboard (`provider-dashboard.html`)** — Provider's own profile summary, logout.
+- **Route protection** — Dashboards redirect to the right login page if nobody (or the wrong role) is signed in.
 
 ## 🛠️ Tech Stack
 
@@ -26,43 +47,55 @@ CityMate ek local-services discovery website hai jo naye shehar me aane wale log
 
 ```
 service website/
-├── index.html                 # Landing page
-├── style.css                  # Landing page styles
-├── logo.jpeg                  # Brand image
+├── index.html                    # Landing page
+├── style.css
+├── logo.jpeg
 │
-├── user-login.html / .js      # User login
-├── user-signup.html / .js     # User signup
-├── provider-login.html / .js  # Provider login
-├── provider-signup.html / .js # Provider signup
-├── auth.css                   # Shared login styles
-├── signup.css                 # Shared signup styles
+├── auth-helpers.js                # Shared: auth guard, logout, error helpers
+├── firebase-config.js             # Firebase init + exported auth/db
+├── firestore.rules                # Recommended security rules (paste into console)
 │
-├── dashboard.html / .js / .css # User dashboard (post-login home)
-├── local-services.html / .css  # Local services listing page
+├── user-login.html / .js          # User login (Google sign-in, forgot password)
+├── user-signup.html / .js         # User signup
+├── provider-login.html / .js      # Provider login
+├── provider-signup.html / .js     # Provider signup
+├── auth.css                       # Shared login styles
+├── signup.css                     # Shared signup styles
 │
-└── firebase-config.js         # Firebase init + exported auth/db instances
+├── dashboard.html / .js / .css    # User dashboard (auth-guarded)
+├── local-services.html / .css     # Service category picker
+├── providers.html / .js / .css    # Live provider listing per category (Firestore)
+└── provider-dashboard.html / .js / .css  # Provider's own profile (auth-guarded)
 ```
 
 ## ⚙️ Setup & Run
 
-Ye ek static frontend project hai — koi build step nahi chahiye.
+Static frontend, no build step.
 
-1. Repo/zip ko ek folder me extract karo.
-2. Firebase ES Modules ko browser directly load karta hai, isliye plain `file://` open karne par CORS/module errors aa sakte hain. Isliye local server se chalao:
+1. Extract the project folder.
+2. Firebase ES Modules need a real server (not `file://`), so run:
    ```bash
    npx serve .
-   # ya
+   # or
    python3 -m http.server 5500
    ```
-3. Browser me `index.html` open karo.
-4. Apna khud ka Firebase project banake `firebase-config.js` me apni config keys daal do (Authentication → Email/Password enable karna zaroori hai, aur Firestore database create karna hoga).
+3. Open `index.html` in the browser via that local server's URL.
+4. Using your own Firebase project? Swap the config in `firebase-config.js`.
 
 ## 🔐 Firebase Setup Checklist
 
-- Firebase Console → Authentication → Sign-in method → **Email/Password** enable karo.
-- Firestore Database create karo (test mode se shuru karo, phir proper security rules likho).
-- `firebaseConfig` object me apna project ka config paste karo (`firebase-config.js`).
+- Authentication → Sign-in method → enable **Email/Password** and **Google**.
+- Firestore Database → create it, then paste `firestore.rules` into the Rules tab and publish. (Test mode leaves your data open to anyone.)
+- Two collections are used: `users` and `providers`, keyed by the Firebase Auth `uid`.
+
+## 🗺️ Ideas for next iteration
+
+- Provider profile editing (currently read-only).
+- Bookings/requests flow between user and provider.
+- Ratings & reviews on provider cards.
+- City/area filter on the providers listing (data already has `city`/`area`).
+- Real "Nearby Shops", "Emergency", "Explore Area", "Food & Restaurants", "Transport" categories (currently only Local Services is wired to real data).
 
 ---
 
-*Ye README project ko analyse karke banaya gaya hai. Agar koi feature already implemented hai jo yaha miss ho gaya, ya koi naya file add ho, please README update kar dena.*
+*Ye README project analysis ke baad update kiya gaya hai. Naya feature add karte time isse bhi update karte rehna.*

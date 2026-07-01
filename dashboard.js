@@ -3,6 +3,7 @@
    "Your First Friend in Every City"
    =====================================================
    Table of Contents:
+   0. Auth Guard + Logout
    1. App Data
    2. DOM References
    3. Dynamic Greeting
@@ -16,16 +17,30 @@
    11. Init
    ===================================================== */
 
+import { requireAuth, wireLogout } from "./auth-helpers.js";
+
 (function () {
     'use strict';
 
     /* =====================================================
-       1. APP DATA
+       0. AUTH GUARD + LOGOUT
        ===================================================== */
 
-    const currentUser = {
-        name: 'Radhe',
-    };
+    // currentUser is filled in once Firebase confirms who is logged in.
+    // Starts with a safe fallback so the page still renders instantly.
+    const currentUser = { name: 'there' };
+
+    wireLogout(document.getElementById('logoutBtn'), 'index.html');
+
+    requireAuth('users', 'user-login.html', (user, profile) => {
+        currentUser.name = profile?.name || user.displayName || user.email?.split('@')[0] || 'there';
+        setDynamicGreeting();
+    });
+
+
+    /* =====================================================
+       1. APP DATA
+       ===================================================== */
 
     // Searchable directory powering the search suggestions list
     const searchDirectory = [
@@ -49,13 +64,6 @@
         { label: 'Bus Routes', icon: 'fa-bus', category: 'Transport' },
     ];
 
-    const locationLabels = [
-        'Indore, Vijay Nagar',
-        'Indore, Palasia',
-        'Bhopal, MP Nagar',
-        'Gaya, Bihar',
-    ];
-
 
     /* =====================================================
        2. DOM REFERENCES
@@ -63,10 +71,6 @@
 
     const greetingMessageEl = document.getElementById('greetingMessage');
     const userNameEl = document.getElementById('userName');
-
-    const locationDropdown = document.getElementById('locationDropdown');
-    const locationMenu = document.getElementById('locationMenu');
-    const currentLocationEl = document.getElementById('currentLocation');
 
     const notificationBtn = document.getElementById('notificationBtn');
     const notificationBadge = document.getElementById('notificationBadge');
@@ -112,56 +116,69 @@
        4. LOCATION DROPDOWN
        ===================================================== */
 
-           const input = document.getElementById("location");
-const suggestions = document.getElementById("suggestions");
+    /**
+     * Wires the header's city/area search input to the OpenStreetMap
+     * Nominatim API and renders clickable suggestions.
+     */
+    function initLocationDropdown() {
+        const input = document.getElementById('location');
+        const suggestions = document.getElementById('suggestions');
 
-let timer;
+        if (!input || !suggestions) return;
 
-input.addEventListener("input", () => {
+        let timer;
 
-    clearTimeout(timer);
+        input.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(searchLocation, 400);
+        });
 
-    timer = setTimeout(searchLocation, 400);
+        async function searchLocation() {
+            const query = input.value.trim();
 
-});
+            if (query.length < 3) {
+                suggestions.innerHTML = '';
+                return;
+            }
 
-async function searchLocation(){
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=in&limit=5`;
 
-    const query = input.value.trim();
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
 
-    if(query.length < 3){
-        suggestions.innerHTML="";
-        return;
-    }
+                suggestions.innerHTML = '';
 
-    const url =
-`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=in&limit=5`;
+                if (data.length === 0) {
+                    const li = document.createElement('li');
+                    li.textContent = 'No matching places found';
+                    suggestions.appendChild(li);
+                    return;
+                }
 
-    const response = await fetch(url);
+                data.forEach((place) => {
+                    const li = document.createElement('li');
+                    li.textContent = place.display_name;
 
-    const data = await response.json();
+                    li.onclick = () => {
+                        input.value = place.display_name;
+                        suggestions.innerHTML = '';
+                    };
 
-    suggestions.innerHTML="";
-
-    data.forEach(place=>{
-
-        const li=document.createElement("li");
-
-        li.textContent=place.display_name;
-
-        li.onclick=()=>{
-
-            input.value=place.display_name;
-
-            suggestions.innerHTML="";
-
+                    suggestions.appendChild(li);
+                });
+            } catch (err) {
+                console.error('Location lookup failed:', err);
+            }
         }
 
-        suggestions.appendChild(li);
-
-    });
-
-}
+        // Close suggestions when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!input.contains(event.target) && !suggestions.contains(event.target)) {
+                suggestions.innerHTML = '';
+            }
+        });
+    }
 
 
     /* =====================================================
@@ -196,6 +213,12 @@ async function searchLocation(){
                 searchInput.value = item.label;
                 closeSuggestions();
                 searchInput.focus();
+
+                // Jump straight to the relevant listing when it maps to
+                // one of the Local Services categories.
+                if (item.category === 'Local Services') {
+                    window.location.href = `providers.html?service=${encodeURIComponent(item.label.replace(' Services', ''))}`;
+                }
             });
 
             searchSuggestions.appendChild(listItem);
@@ -279,9 +302,7 @@ async function searchLocation(){
         let unreadCount = parseInt(notificationBadge.textContent, 10) || 0;
 
         notificationBtn.addEventListener('click', () => {
-            // Ring animation feedback
             notificationBtn.classList.remove('ringing');
-            // restart animation reliably
             void notificationBtn.offsetWidth;
             notificationBtn.classList.add('ringing');
 
@@ -316,6 +337,16 @@ async function searchLocation(){
             pill.addEventListener('click', (event) => {
                 const icon = pill.querySelector('.service-pill-icon');
                 spawnRipple(icon, event, true);
+
+                const service = pill.dataset.service;
+                if (service && service !== 'more') {
+                    const label = service.charAt(0).toUpperCase() + service.slice(1);
+                    setTimeout(() => {
+                        window.location.href = `providers.html?service=${encodeURIComponent(label)}`;
+                    }, 200);
+                } else if (service === 'more') {
+                    window.location.href = 'local-services.html';
+                }
             });
         });
 
@@ -323,6 +354,7 @@ async function searchLocation(){
             viewAllBtn.addEventListener('click', () => {
                 viewAllBtn.classList.add('bounce');
                 setTimeout(() => viewAllBtn.classList.remove('bounce'), 400);
+                window.location.href = 'local-services.html';
             });
         }
     }

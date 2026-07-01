@@ -1,0 +1,30 @@
+// =====================================================
+// CITYMATE — RECOMMENDED FIRESTORE SECURITY RULES
+// =====================================================
+// Copy these into Firebase Console -> Firestore Database -> Rules,
+// then click "Publish". Without rules like these, Firestore's
+// default "test mode" allows ANYONE to read/write ALL data.
+// =====================================================
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users can read their own profile, and update/delete only their own.
+    // Anyone signed in can create their own user doc during signup.
+    match /users/{userId} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Provider profiles are publicly readable (users need to browse them
+    // on the Local Services / providers pages), but only the provider
+    // themself can create/update/delete their own listing.
+    match /providers/{providerId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == providerId;
+      allow update, delete: if request.auth != null && request.auth.uid == providerId;
+    }
+  }
+}

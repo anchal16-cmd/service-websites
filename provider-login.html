@@ -3,141 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provider Signup - CityMate</title>
-    <link rel="stylesheet" href="signup.css">
+    <title>Provider Login - CityMate</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-<div class="container">
+<div class="login-container provider-theme">
 
-    <div class="card">
+    <div class="top-bar">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <a href="provider-signup.html">New here? Sign up</a>
+    </div>
 
-        <h1>CityMate</h1>
-        <p class="tagline">Your First Friend in Every City</p>
+    <div class="profile-icon">
+        <i class="fa-solid fa-hard-hat"></i>
+    </div>
 
-        <h2>Create Provider Account</h2>
+    <h1>Welcome Back, Provider</h1>
+    <p class="subtitle">Login to manage your service listings</p>
 
-        <form id="providerSignupForm">
+    <form id="providerLoginForm">
 
-            <input
-                type="text"
-                id="providerName"
-                placeholder="Full Name"
-                required>
+        <label for="providerEmail">Email Address</label>
+        <input
+            type="email"
+            id="providerEmail"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required>
 
-            <input
-                type="email"
-                id="providerEmail"
-                placeholder="Email Address"
-                required>
-
-            <input
-                type="tel"
-                id="providerPhone"
-                placeholder="Phone Number"
-                required>
-
+        <label for="providerPassword">Password</label>
+        <div class="password-box">
             <input
                 type="password"
                 id="providerPassword"
-                placeholder="Password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
                 required>
+            <i class="fa-solid fa-eye" id="toggleProviderPassword"></i>
+        </div>
 
-            <input
-                type="password"
-                id="providerConfirmPassword"
-                placeholder="Confirm Password"
-                required>
+        <div class="options">
+            <label>
+                <input type="checkbox" id="rememberMe">
+                Remember me
+            </label>
+            <a href="#" id="forgotPasswordLink">Forgot password?</a>
+        </div>
 
-            <select id="serviceCategory" required>
-                <option value="">Select Service Category</option>
-                <option>Plumber</option>
-                <option>Electrician</option>
-                <option>Carpenter</option>
-                <option>Painter</option>
-                <option>Maid</option>
-                <option>Salon</option>
-                <option>AC Repair</option>
-                <option>Computer Repair</option>
-            </select>
+        <p class="form-error" id="providerLoginError"></p>
 
-            <input
-                type="number"
-                id="experience"
-                placeholder="Experience (Years)"
-                required>
+        <button type="submit" class="login-btn" id="providerLoginBtn">
+            Login
+        </button>
 
-            <select id="state" required>
-                <option value="">Select State</option>
-                <option value="MP">Madhya Pradesh</option>
-                <option value="UP">Uttar Pradesh</option>
-                <option value="MH">Maharashtra</option>
-                <option value="RJ">Rajasthan</option>
-            </select>
+    </form>
 
-            <select id="city" required>
-                <option value="">Select City</option>
-            </select>
-
-            <input
-                type="text"
-                id="area"
-                placeholder="Area"
-                required>
-
-            <button type="submit">
-                Register as Provider
-            </button>
-
-        </form>
-
-        <p class="link">
-            Already have an account?
-            <a href="provider-login.html">Login</a>
-        </p>
-
-    </div>
+    <p class="signup-text">
+        Don't have a provider account?
+        <a href="provider-signup.html">Register as Provider</a>
+    </p>
 
 </div>
 
-<script>
-const cities = {
-    MP:["Indore","Bhopal","Gwalior","Jabalpur"],
-    UP:["Lucknow","Kanpur","Agra","Varanasi"],
-    MH:["Mumbai","Pune","Nagpur","Nashik"],
-    RJ:["Jaipur","Jodhpur","Udaipur","Kota"]
-};
-
-const stateSelect = document.getElementById("state");
-const citySelect = document.getElementById("city");
-
-stateSelect.addEventListener("change", function(){
-
-    citySelect.innerHTML =
-    '<option value="">Select City</option>';
-
-    const selectedState = this.value;
-
-    if(cities[selectedState]){
-
-        cities[selectedState].forEach(city => {
-
-            const option =
-            document.createElement("option");
-
-            option.value = city;
-            option.textContent = city;
-
-            citySelect.appendChild(option);
-
-        });
-
-    }
-
-});
-</script>
-
-<script type="module" src="provider-signup.js"></script>
+<script type="module" src="provider-login.js"></script>
 
 </body>
 </html>

@@ -41,11 +41,16 @@ body{
     align-items:center;
     cursor:pointer;
     transition:.3s;
+    text-decoration:none;
+    color:white;
+    border:1px solid transparent;
 }
 
-.service-item:hover{
+.service-item:hover,
+.service-item:focus-visible{
     transform:translateY(-3px);
     border:1px solid #ff8c00;
+    outline:none;
 }
 
 .left{

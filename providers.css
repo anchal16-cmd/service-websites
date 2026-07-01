@@ -1,0 +1,146 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#071323;
+    color:white;
+    min-height:100vh;
+}
+
+.container{
+    width:92%;
+    max-width:800px;
+    margin:auto;
+    padding:20px 0 60px;
+}
+
+.header{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    margin-bottom:10px;
+}
+
+.header a{
+    color:white;
+    font-size:22px;
+    text-decoration:none;
+}
+
+.header h2{
+    text-transform:capitalize;
+}
+
+.subtitle{
+    color:#8794a8;
+    margin-bottom:26px;
+    font-size:14px;
+}
+
+.state-msg{
+    text-align:center;
+    color:#8794a8;
+    padding:60px 20px;
+}
+
+.state-msg i{
+    font-size:40px;
+    color:#ff8c00;
+    margin-bottom:14px;
+    display:block;
+}
+
+.provider-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.provider-card{
+    background:#0f1f36;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:18px;
+    padding:20px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+}
+
+.provider-avatar{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ff8c00,#ff5c00);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.provider-info{
+    flex:1;
+    min-width:0;
+}
+
+.provider-info h3{
+    margin-bottom:4px;
+}
+
+.provider-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    color:#8794a8;
+    font-size:13px;
+    margin-bottom:12px;
+}
+
+.provider-meta span{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.provider-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.provider-actions a{
+    text-decoration:none;
+    color:white;
+    font-size:13px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    transition:.2s;
+}
+
+.call-btn{
+    background:linear-gradient(90deg,#ff7b00,#ff5c00);
+}
+
+.email-btn{
+    background:#1d2944;
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.provider-actions a:hover{
+    transform:translateY(-2px);
+}
+
+@media(max-width:600px){
+    .provider-card{
+        flex-direction:column;
+    }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Provider Dashboard | CityMate</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="provider-dashboard.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <div class="logo">
+            <i class="fa-solid fa-hard-hat"></i>
+            CityMate
+        </div>
+        <a href="#" class="logout-link" id="logoutBtn">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+
+    <div class="profile-card">
+        <div class="profile-avatar" id="providerAvatar">?</div>
+        <h1 id="providerName">Loading...</h1>
+        <p id="providerEmail" style="color:#8794a8; font-size:14px;"></p>
+        <span class="badge" id="providerServiceBadge"><i class="fa-solid fa-briefcase"></i> —</span>
+
+        <div class="details-grid">
+            <div class="detail-item">
+                <span>Phone</span>
+                <strong id="providerPhone">—</strong>
+            </div>
+            <div class="detail-item">
+                <span>Experience</span>
+                <strong id="providerExperience">—</strong>
+            </div>
+            <div class="detail-item">
+                <span>City</span>
+                <strong id="providerCity">—</strong>
+            </div>
+            <div class="detail-item">
+                <span>Area</span>
+                <strong id="providerArea">—</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>
+            This is your provider profile — the details users see when they find you
+            through Local Services. Editing profiles and viewing bookings are coming soon.
+        </span>
+    </div>
+
+</div>
+
+<script type="module" src="provider-dashboard.js"></script>
+
+</body>
+</html>
